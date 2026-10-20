@@ -736,7 +736,7 @@ const TRAPS = [
   ["Z", "“zed” in Canada (“zee” in the US)", "Not “zê”. You'll hear zed in Vancouver."]
 ];
 let dAudio = null, dTimer = null;
-function dStop() { if (dAudio) dAudio.pause(); clearTimeout(dTimer); document.querySelectorAll(".dplay.on").forEach(b => b.classList.remove("on")); }
+function dStop() { if (dAudio) dAudio.pause(); clearInterval(dTimer); document.querySelectorAll(".dplay.on").forEach(b => b.classList.remove("on")); }
 function dPlay(file, k, btn) {
   stopAll(); dStop();
   const seg = DRILL.t[file][k];
@@ -748,7 +748,8 @@ function dPlay(file, k, btn) {
     dAudio.playbackRate = +(store.get("drillRate", "1"));
     dAudio.play().catch(() => {});
     if (btn) btn.classList.add("on");
-    dTimer = setTimeout(dStop, (seg[1] - seg[0] + 0.15) * 1000 / dAudio.playbackRate);
+    const end = seg[1] + 0.3;
+    dTimer = setInterval(() => { if (dAudio.currentTime >= end || dAudio.ended) dStop(); }, 40);
   };
   if (dAudio.readyState >= 1) go(); else dAudio.addEventListener("loadedmetadata", go, { once: true });
 }
