@@ -766,8 +766,8 @@ function renderDrill() {
   const set = +store.get("drillSet", 0), D = DRILL.dict[set];
   const score = DRILL.dict.map((d, si) => d.items.filter((_, i) => store.get(`drill:${si}:${i}`, "") === "ok").length);
   $("#view").innerHTML = `<article class="drill" data-part="10">
-    <div class="plate"><div class="num" aria-hidden="true"><small>Part</small><b>10</b></div><div>
-      <p class="partname">Part 10: Spell It Out</p><h2>Phone Alphabet drill</h2>
+    <div class="plate"><div class="num" aria-hidden="true"><small>Drill</small><b>A–Z</b></div><div>
+      <p class="partname">Free practice for every Listening Lab</p><h2>Phone Alphabet drill</h2>
       <p class="scene">Names, numbers and email addresses on the phone. Tap anything to hear it.</p>
       <div class="facts"><label>Speed <select id="drate">${["0.75", "0.9", "1"].map(r => `<option value="${r}" ${store.get("drillRate", "1") === r ? "selected" : ""}>${r === "1" ? "normal" : r + "×"}</option>`).join("")}</select></label></div>
     </div></div>
@@ -799,7 +799,7 @@ function renderDrill() {
         <p class="dres" id="dr${i}" ${st ? "" : "hidden"}>${st ? dMsg(it, st === "ok") : ""}</p></li>`; }).join("")}</ol>
       <p class="resetrow"><button class="linkbtn" id="dreset">Clear this set</button></p>
     </section>
-    <div class="notice"><h3>Now try the phone calls</h3><p>Part 10 has twenty short phone calls with names, numbers and email addresses to write down. <button class="linkbtn" data-script="76">Start with script 76.</button></p></div>
+    <div class="notice"><h3>Now try the phone calls</h3><p>In this Networking Lab, Part 10 has twenty short phone calls with names, numbers and email addresses to write down. <button class="linkbtn" data-script="76">Start with script 76.</button></p></div>
   </article>`;
   document.querySelectorAll(".drill .dplay").forEach(b => b.onclick = () => dPlay(b.dataset.f, +b.dataset.k, b));
   $("#drate").onchange = e => store.set("drillRate", e.target.value);
@@ -896,7 +896,8 @@ function resultText(s) {
 /* ---------- routing ---------- */
 function route() {
   const h = location.hash;
-  if (h.startsWith("#script-")) renderScript(+h.slice(8)); else if (h === "#alphabet") renderDrill(); else renderHome();
+  const dr = h === "#alphabet", nm = dr ? "Phone Alphabet Drill" : "Networking Listening Lab"; document.querySelectorAll(".brand h1, .topbar strong").forEach(e => e.textContent = nm); document.title = nm + " | Ron Taylor Executive Class";
+  if (h.startsWith("#script-")) renderScript(+h.slice(8)); else if (dr) renderDrill(); else renderHome();
   renderNav($("#q").value); closeMenu();
 }
 document.addEventListener("click", e => {
